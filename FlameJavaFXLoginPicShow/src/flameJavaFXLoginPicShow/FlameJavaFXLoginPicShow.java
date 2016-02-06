@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-/*
+ /*
  * Copyright (c) 2008, 2012 Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -35,21 +35,15 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package flameJavaFXLoginPicShow;
 
 import java.io.InputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.fxml.JavaFXBuilderFactory;
-import javafx.scene.Group;
-import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.shape.Circle;
-import javafx.stage.Stage;
 import flameJavaFXLoginPicShow.model.User;
 import flameJavaFXLoginPicShow.security.Authenticator;
 import javafx.animation.Interpolator;
@@ -75,6 +69,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Region;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -91,9 +86,9 @@ public class FlameJavaFXLoginPicShow extends Application {
     private final double MINIMUM_WINDOW_HEIGHT = 300.0;
 
     @Override
-    public void start(Stage primaryStage) {
+    public void start(Stage primaryStage1) {
         try {
-            stage = primaryStage;
+            stage = primaryStage1;
             stage.setTitle("Login Window");
             stage.setMinWidth(MINIMUM_WINDOW_WIDTH);
             stage.setMinHeight(MINIMUM_WINDOW_HEIGHT);
@@ -123,6 +118,7 @@ public class FlameJavaFXLoginPicShow extends Application {
     public boolean userLogging(String userId, String password) {
         if (Authenticator.validate(userId, password)) {
             loggedUser = User.of(userId);
+            stage.close();
             gotoMainWindow();
             return true;
         } else {
@@ -141,7 +137,7 @@ public class FlameJavaFXLoginPicShow extends Application {
         } finally {
             in.close();
         }
-        Scene scene = new Scene(page, 560, 420);
+        Scene scene = new Scene(page, 600, 400);
         stage.setScene(scene);
         stage.sizeToScene();
         return (Initializable) loader.getController();
@@ -149,51 +145,49 @@ public class FlameJavaFXLoginPicShow extends Application {
 
     private void gotoMainWindow() {
         try {
-            Circle circ = new Circle(40, 40, 30);
-            Group root = new Group(circ);
-            Scene scene = new Scene(root, 800, 600);
-            stage.setTitle("Main Window");
-//            stage.setScene(scene);
-        initPicShow(stage);
-        stage.show();
+            initPicShow(stage);
+            stage.show();
         } catch (Exception ex) {
             Logger.getLogger(FlameJavaFXLoginPicShow.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
- /**
- * A display shelf of images using the PerspectiveTransform effect.
- *
- * @see javafx.scene.effect.PerspectiveTransform
- * @see javafx.scene.effect.Reflection
- * @see javafx.scene.control.ScrollBar
- * @see javafx.scene.input.MouseEvent
- * @see javafx.scene.input.KeyEvent
- * @resource animal1.jpg
- * @resource animal2.jpg
- * @resource animal3.jpg
- * @resource animal4.jpg
- * @resource animal5.jpg
- * @resource animal6.jpg
- * @resource animal7.jpg
- * @resource animal8.jpg
- * @resource animal9.jpg
- * @resource animal10.jpg
- * @resource animal11.jpg
- * @resource animal12.jpg
- * @resource animal13.jpg
- * @resource animal14.jpg
- */
-    private static final double WIDTHPICSHOW = 495, HEIGHTPICSHOW = 300;
+    /**
+     * A display shelf of images using the PerspectiveTransform effect.
+     *
+     * @see javafx.scene.effect.PerspectiveTransform
+     * @see javafx.scene.effect.Reflection
+     * @see javafx.scene.control.ScrollBar
+     * @see javafx.scene.input.MouseEvent
+     * @see javafx.scene.input.KeyEvent
+     * @resource animal1.jpg
+     * @resource animal2.jpg
+     * @resource animal3.jpg
+     * @resource animal4.jpg
+     * @resource animal5.jpg
+     * @resource animal6.jpg
+     * @resource animal7.jpg
+     * @resource animal8.jpg
+     * @resource animal9.jpg
+     * @resource animal10.jpg
+     * @resource animal11.jpg
+     * @resource animal12.jpg
+     * @resource animal13.jpg
+     * @resource animal14.jpg
+     */
+    private static final int WIDTHPICSHOW = 990, HEIGHTPICSHOW = 600;
 
-    private void initPicShow(Stage primaryStage) {
+    private void initPicShow(Stage primaryStage2) {
+        stage = primaryStage2;
+        stage.setTitle("Main Window");
         Group root = new Group();
-        primaryStage.setResizable(false);
-        primaryStage.setScene(new Scene(root, 495,300));
-         // load images
-        Image[] images = new Image[14];
-        for (int i = 0; i < 14; i++) {
-            images[i] = new Image( PicShow.class.getResource("animal"+(i+1)+".jpg").toExternalForm(),false);
+        stage.setResizable(false);
+        stage.setScene(new Scene(root, 980, 590));
+        // load images
+
+        Image[] images = new Image[6];
+        for (int i = 0; i < 6; i++) {
+            images[i] = new Image(FlameJavaFXLoginPicShow.class.getResource("ny0" + (i + 1) + ".jpg").toExternalForm(), false);
         }
         // create display shelf
         Shelf displayShelf = new Shelf(images);
@@ -205,11 +199,12 @@ public class FlameJavaFXLoginPicShow extends Application {
      * A ui control which displays a browseble display shlef of images
      */
     public static class Shelf extends Region {
+
         private static final Duration DURATION = Duration.millis(500);
         private static final Interpolator INTERPOLATOR = Interpolator.EASE_BOTH;
-        private static final double SPACING = 50;
-        private static final double LEFT_OFFSET = -110;
-        private static final double RIGHT_OFFSET = 110;
+        private static final double SPACING = 100;
+        private static final double LEFT_OFFSET = -220;
+        private static final double RIGHT_OFFSET = 220;
         private static final double SCALE_SMALL = 0.7;
         private PerspectiveImage[] items;
         private Group centered = new Group();
@@ -226,15 +221,15 @@ public class FlameJavaFXLoginPicShow extends Application {
             // set clip
             setClip(clip);
             // set background gradient using css
-            setStyle("-fx-background-color: linear-gradient(to bottom," +
-                    " black 60, #141414 60.1%, black 100%);");
+            setStyle("-fx-background-color: linear-gradient(to bottom,"
+                    + " black 60, #141414 60.1%, black 100%);");
             // style scroll bar color
             scrollBar.setStyle("-fx-base: #202020; -fx-background: #202020;");
             // create items
             items = new PerspectiveImage[images.length];
-            for (int i=0; i<images.length; i++) {
-                final PerspectiveImage item =
-                        items[i] = new PerspectiveImage(images[i]);
+            for (int i = 0; i < images.length; i++) {
+                final PerspectiveImage item
+                        = items[i] = new PerspectiveImage(images[i]);
                 final double index = i;
                 item.setOnMouseClicked(new EventHandler<MouseEvent>() {
                     public void handle(MouseEvent me) {
@@ -246,19 +241,20 @@ public class FlameJavaFXLoginPicShow extends Application {
                 });
             }
             // setup scroll bar
-            scrollBar.setMax(items.length-1);
+            scrollBar.setMax(items.length - 1);
             scrollBar.setVisibleAmount(1);
             scrollBar.setUnitIncrement(1);
             scrollBar.setBlockIncrement(1);
             scrollBar.valueProperty().addListener(new InvalidationListener() {
                 public void invalidated(Observable ov) {
-                    if(!localChange)
-                        shiftToCenter(items[(int)scrollBar.getValue()]);
+                    if (!localChange) {
+                        shiftToCenter(items[(int) scrollBar.getValue()]);
+                    }
                 }
             });
             // create content
             centered.getChildren().addAll(left, right, center);
-            getChildren().addAll(centered,scrollBar);
+            getChildren().addAll(centered, scrollBar);
             // listen for keyboard events
             setFocusTraversable(true);
             setOnKeyPressed(new EventHandler<KeyEvent>() {
@@ -280,7 +276,8 @@ public class FlameJavaFXLoginPicShow extends Application {
             update();
         }
 
-        @Override protected void layoutChildren() {
+        @Override
+        protected void layoutChildren() {
             // update clip to our size
             clip.setWidth(getWidth());
             clip.setHeight(getHeight());
@@ -288,9 +285,9 @@ public class FlameJavaFXLoginPicShow extends Application {
             centered.setLayoutY((getHeight() - PerspectiveImage.HEIGHT) / 2);
             centered.setLayoutX((getWidth() - PerspectiveImage.WIDTH) / 2);
             // position scroll bar at bottom
-            scrollBar.setLayoutX(10);
-            scrollBar.setLayoutY(getHeight()-25);
-            scrollBar.resize(getWidth()-20,15);
+            scrollBar.setLayoutX(20);
+            scrollBar.setLayoutY(getHeight() - 50);
+            scrollBar.resize(getWidth() - 40, 30);
         }
 
         private void update() {
@@ -306,20 +303,22 @@ public class FlameJavaFXLoginPicShow extends Application {
                 right.getChildren().add(items[i]);
             }
             // stop old timeline if there is one running
-            if (timeline!=null) timeline.stop();
+            if (timeline != null) {
+                timeline.stop();
+            }
             // create timeline to animate to new positions
             timeline = new Timeline();
             // add keyframes for left items
             final ObservableList<KeyFrame> keyFrames = timeline.getKeyFrames();
             for (int i = 0; i < left.getChildren().size(); i++) {
                 final PerspectiveImage it = items[i];
-                double newX = -left.getChildren().size() *
-                        SPACING + SPACING * i + LEFT_OFFSET;
+                double newX = -left.getChildren().size()
+                        * SPACING + SPACING * i + LEFT_OFFSET;
                 keyFrames.add(new KeyFrame(DURATION,
-                    new KeyValue(it.translateXProperty(), newX, INTERPOLATOR),
-                    new KeyValue(it.scaleXProperty(), SCALE_SMALL, INTERPOLATOR),
-                    new KeyValue(it.scaleYProperty(), SCALE_SMALL, INTERPOLATOR),
-                    new KeyValue(it.angle, 45.0, INTERPOLATOR)));
+                        new KeyValue(it.translateXProperty(), newX, INTERPOLATOR),
+                        new KeyValue(it.scaleXProperty(), SCALE_SMALL, INTERPOLATOR),
+                        new KeyValue(it.scaleYProperty(), SCALE_SMALL, INTERPOLATOR),
+                        new KeyValue(it.angle, 45.0, INTERPOLATOR)));
             }
             // add keyframe for center item
             final PerspectiveImage centerItem = items[centerIndex];
@@ -331,13 +330,13 @@ public class FlameJavaFXLoginPicShow extends Application {
             // add keyframes for right items
             for (int i = 0; i < right.getChildren().size(); i++) {
                 final PerspectiveImage it = items[items.length - i - 1];
-                final double newX = right.getChildren().size() *
-                        SPACING - SPACING * i + RIGHT_OFFSET;
+                final double newX = right.getChildren().size()
+                        * SPACING - SPACING * i + RIGHT_OFFSET;
                 keyFrames.add(new KeyFrame(DURATION,
                         new KeyValue(it.translateXProperty(), newX, INTERPOLATOR),
                         new KeyValue(it.scaleXProperty(), SCALE_SMALL, INTERPOLATOR),
                         new KeyValue(it.scaleYProperty(), SCALE_SMALL, INTERPOLATOR),
-                        new KeyValue(it.angle, 135.0, INTERPOLATOR)));
+                        new KeyValue(it.angle, 270.0, INTERPOLATOR)));
             }
             // play animation
             timeline.play();
@@ -364,26 +363,36 @@ public class FlameJavaFXLoginPicShow extends Application {
         }
 
         public void shift(int shiftAmount) {
-            if (centerIndex <= 0 && shiftAmount > 0) return;
-            if (centerIndex >= items.length - 1 && shiftAmount < 0) return;
+            if (centerIndex <= 0 && shiftAmount > 0) {
+                return;
+            }
+            if (centerIndex >= items.length - 1 && shiftAmount < 0) {
+                return;
+            }
             centerIndex -= shiftAmount;
             update();
         }
     }
 
     /**
-     * A Node that displays a image with some 2.5D perspective rotation around the Y axis.
+     * A Node that displays a image with some 2.5D perspective rotation around
+     * the Y axis.
      */
     public static class PerspectiveImage extends Parent {
+
         private static final double REFLECTION_SIZE = 0.25;
-        private static final double WIDTH = 200;
-        private static final double HEIGHT = WIDTH + (WIDTH*REFLECTION_SIZE);
+//        private static final double WIDTH = 200;
+        private static final double WIDTH = 400;
+        private static final double HEIGHT = WIDTH + (WIDTH * REFLECTION_SIZE);
         private static final double RADIUS_H = WIDTH / 2;
         private static final double BACK = WIDTH / 10;
         private PerspectiveTransform transform = new PerspectiveTransform();
-        /** Angle Property */
+        /**
+         * Angle Property
+         */
         private final DoubleProperty angle = new SimpleDoubleProperty(45) {
-            @Override protected void invalidated() {
+            @Override
+            protected void invalidated() {
                 // when angle changes calculate new transform
                 double lx = (RADIUS_H - Math.sin(Math.toRadians(angle.get())) * RADIUS_H - 1);
                 double rx = (RADIUS_H + Math.sin(Math.toRadians(angle.get())) * RADIUS_H + 1);
@@ -399,9 +408,18 @@ public class FlameJavaFXLoginPicShow extends Application {
                 transform.setLly(HEIGHT + ury);
             }
         };
-        public final double getAngle() { return angle.getValue(); }
-        public final void setAngle(double value) { angle.setValue(value); }
-        public final DoubleProperty angleModel() { return angle; }
+
+        public final double getAngle() {
+            return angle.getValue();
+        }
+
+        public final void setAngle(double value) {
+            angle.setValue(value);
+        }
+
+        public final DoubleProperty angleModel() {
+            return angle;
+        }
 
         public PerspectiveImage(Image image) {
             ImageView imageView = new ImageView(image);
@@ -410,5 +428,4 @@ public class FlameJavaFXLoginPicShow extends Application {
             getChildren().addAll(imageView);
         }
     }
-    
 }
